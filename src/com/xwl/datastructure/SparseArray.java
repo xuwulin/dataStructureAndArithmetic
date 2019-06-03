@@ -6,7 +6,10 @@ import java.io.*;
  * @Auther: xwl
  * @Date: 2019/5/31 11:37
  * @Description: 稀疏数组
- *
+ * 需求：模拟五子棋，创建一个11 * 11大小的二维数组模拟棋盘，数字1代表白子，数字2代表黑子；
+ * 存盘：将二维数组保存为文件（应该先将二维数组转化为稀疏数组再存盘）
+ * 读盘：读取文件内容转化为二维数组（稀疏数组），再将稀疏数组转为普通的二维数组
+ * <p>
  * 举例，下面就是一个稀疏数组：
  * 11  11  3
  * 1   2   1
@@ -30,17 +33,19 @@ public class SparseArray {
         chessArr1[4][5] = 2;
         // 输出原始的二维数组
         System.out.println("原始的二维数组~~");
-//      0	0	0	0	0	0	0	0	0	0	0
-//      0	0	1	0	0	0	0	0	0	0	0
-//      0	0	0	2	0	0	0	0	0	0	0
-//      0	0	0	0	0	0	0	0	0	0	0
-//      0	0	0	0	0	2	0	0	0	0	0
-//      0	0	0	0	0	0	0	0	0	0	0
-//      0	0	0	0	0	0	0	0	0	0	0
-//      0	0	0	0	0	0	0	0	0	0	0
-//      0	0	0	0	0	0	0	0	0	0	0
-//      0	0	0	0	0	0	0	0	0	0	0
-//      0	0	0	0	0	0	0	0	0	0	0
+        /**
+         * 0	0	0	0	0	0	0	0	0	0	0
+         * 0	0	1	0	0	0	0	0	0	0	0
+         * 0	0	0	2	0	0	0	0	0	0	0
+         * 0	0	0	0	0	0	0	0	0	0	0
+         * 0	0	0	0	0	2	0	0	0	0	0
+         * 0	0	0	0	0	0	0	0	0	0	0
+         * 0	0	0	0	0	0	0	0	0	0	0
+         * 0	0	0	0	0	0	0	0	0	0	0
+         * 0	0	0	0	0	0	0	0	0	0	0
+         * 0	0	0	0	0	0	0	0	0	0	0
+         * 0	0	0	0	0	0	0	0	0	0	0
+         */
         // 使用增强for循环遍历二位数组
         for (int[] row : chessArr1) {
             for (int data : row) {
@@ -51,10 +56,12 @@ public class SparseArray {
 
         // 将二维数组 转 稀疏数组的思路
         // 转成的稀疏数组为
-        // 11  11  3
-        // 1   2   1
-        // 2   3   2
-        // 4   5   2
+        /**
+         * 11  11  3
+         * 1   2   1
+         * 2   3   2
+         * 4   5   2
+         */
         // 1. 先遍历二维数组 得到非0数据的个数
         int sum = 0;
         // 便利行
@@ -93,25 +100,36 @@ public class SparseArray {
 
         // 输出稀疏数组
         System.out.println("转换成的稀疏数组~~");
-        for (int i = 0; i < sparseArr.length; i++) {
-            System.out.printf("%d\t%d\t%d\t\n", sparseArr[i][0], sparseArr[i][1], sparseArr[i][2]);
+        for (int[] ints : sparseArr) {
+            System.out.printf("%d\t%d\t%d\t\n", ints[0], ints[1], ints[2]);
         }
 
-        // 将稀疏数组写入文件
-//        String filePath = "D:\\workspace_idea\\prisonbreak\\src\\main\\java\\com\\xwl\\prisonbreak\\datastructure\\file";
-        String filePath = "/";
+        /***************************************以下1、2两步是【存盘】和【读取存盘】***************************************/
+        /**
+         * 1、将稀疏数组写入文件，相当于存盘
+         */
+        // 文件路劲为：根路径下的file文件
+        String filePath = "file";
         String fileName = "sparseArr";
         saveDoubleArraysToFile(filePath, fileName, sparseArr);
 
-        // 读取文件，将文件内容转为稀疏数组
+        /**
+         * 2、读取文件，将文件内容转为稀疏数组，相当于读取存盘记录
+         */
         FileReader file = null;
         try {
-            file = new FileReader("D:\\workspace_idea\\prisonbreak\\src\\main\\java\\com\\xwl\\prisonbreak\\datastructure\\file\\sparseArr.txt");
+            file = new FileReader("file/sparseArr.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         System.out.println("文件测试数据如下：");
-        readFileToData(file);
+        // 读取文件转为二维数组（将文件恢复成稀疏数组）
+        int rowSize = sparseArr.length;
+        int colSize = sparseArr[0].length;
+        int[][] intDoubleArr = readFileToData(file, rowSize, colSize);
+        // 赋值给稀疏数组
+        sparseArr = intDoubleArr;
+        /***************************************以上1、2两步是【存盘】和【读取存盘】扩展功能可以忽略************************/
 
         // 将稀疏数组 --> 恢复成 原始的二维数组
         // 1. 先读取稀疏数组的第一行，根据第一行的数据，创建原始的二维数组
@@ -283,18 +301,20 @@ public class SparseArray {
      * 4   5   2
      *
      * @param file 文件
+     * @param row 二维数组的行数
+     * @param col 二维数组的列数
      */
-    public static void readFileToData(FileReader file) {
+    public static int[][] readFileToData(FileReader file, int row, int col) {
         // 读取文件
         BufferedReader br = new BufferedReader(file);
-
         try {
-
             // 读取一行数据（第一行）
             String line = null;
             String[] splitArr = null;
             // 定义字符二维数组（必须规定数组的大小才能对其赋值）
-            String[][] strDoubleArr = new String[4][3];
+            String[][] strDoubleArr = new String[row][col];
+            // 定义整型二维数组
+            int[][] intDoubleArr = new int[row][col];
             int count = 0;
             // 按行读取
             while ((line = br.readLine()) != null) {
@@ -303,48 +323,15 @@ public class SparseArray {
                 int len = splitArr.length;
                 for (int i = 0; i < len; i++) {
                     strDoubleArr[count][i] = splitArr[i];
+                    intDoubleArr[count][i] = Integer.parseInt(splitArr[i]);
                 }
                 count++;
             }
-
-//            for (int i = 0; i < lines; i++) {
-//                for (int j = 0; j < lines; j++) {
-//                    cc[i][j] = Integer.parseInt(c[i][j]);
-//                    System.out.print(cc[i][j]);
-//                }
-//                System.out.println();
-//            }
-
-
-            // 按制表符截取
-            String[] split = line.split("\t");
-
-            // 读取文件的列数（即二维数组的列数）；注：文件中二维数组每一行的列数必须一致
-            int col = split.length;
-
-            // 读取文件的行数（即二维数组的行数），暂时写成固定值
-            int row = 4;
-//            while (br.readLine() != null) {
-//                row++;
-//            }
-
-
-            // 构建字符型二维数组
-            String[][] c = new String[row][col];
-            // 构建int型二维数组
-            int[][] cc = new int[row][col];
-
-//            for (int i = 0; i < lines; i++) {
-//                for (int j = 0; j < lines; j++) {
-//                    cc[i][j] = Integer.parseInt(c[i][j]);
-//                    System.out.print(cc[i][j]);
-//                }
-//                System.out.println();
-//            }
-
+            return intDoubleArr;
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return new int[row][col];
     }
 
 }
