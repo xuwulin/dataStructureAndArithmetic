@@ -64,7 +64,7 @@ public class SparseArray {
          */
         // 1. 先遍历二维数组 得到非0数据的个数
         int sum = 0;
-        // 便利行
+        // 遍历行
         for (int i = 0; i < 11; i++) {
             // 遍历列
             for (int j = 0; j < 11; j++) {
@@ -184,7 +184,6 @@ public class SparseArray {
         }
         return file;
     }
-
 
     /**
      * 写入二维数组到文件
