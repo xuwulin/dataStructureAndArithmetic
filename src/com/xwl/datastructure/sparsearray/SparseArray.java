@@ -1,4 +1,4 @@
-package com.xwl.datastructure;
+package com.xwl.datastructure.sparsearray;
 
 import java.io.*;
 
@@ -46,7 +46,7 @@ public class SparseArray {
          * 0	0	0	0	0	0	0	0	0	0	0
          * 0	0	0	0	0	0	0	0	0	0	0
          */
-        // 使用增强for循环遍历二位数组
+        // 使用增强for循环遍历二维数组
         for (int[] row : chessArr1) {
             for (int data : row) {
                 System.out.printf("%d\t", data);
@@ -109,7 +109,7 @@ public class SparseArray {
          * 1、将稀疏数组写入文件，相当于存盘
          */
         // 文件路劲为：根路径下的file文件
-        String filePath = "file";
+        String filePath = "src\\com\\xwl\\datastructure\\sparsearray\\file";
         String fileName = "sparseArr";
         saveDoubleArraysToFile(filePath, fileName, sparseArr);
 
@@ -118,7 +118,7 @@ public class SparseArray {
          */
         FileReader file = null;
         try {
-            file = new FileReader("file/sparseArr.txt");
+            file = new FileReader("src\\com\\xwl\\datastructure\\sparsearray\\file\\sparseArr.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -332,5 +332,4 @@ public class SparseArray {
         }
         return new int[row][col];
     }
-
 }
