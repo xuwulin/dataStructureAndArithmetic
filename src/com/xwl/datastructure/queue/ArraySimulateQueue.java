@@ -3,7 +3,7 @@ package com.xwl.datastructure.queue;
 import java.util.Scanner;
 
 /**
- * @Auther: xwl
+ * @Author: xwl
  * @Date: 2019/6/4 17:28
  * @Description: 使用数组模拟队列
  * 1) 队列是一个 有序列表，可以用 数组或是 链表来实现。
@@ -17,7 +17,7 @@ import java.util.Scanner;
  * 1) 将尾指针往后移：rear+1 , 当 front == rear 【空】
  * 2) 若尾指针 rear 小于队列的最大下标 maxSize-1，则将数据存入 rear 所指的数组元素中，否则无法存入数据。
  * rear == maxSize - 1[队列满]
- *
+ * <p>
  * 问题分析并优化
  * 1) 目前数组使用一次就不能用， 没有达到复用的效果
  * 2) 将这个数组使用算法，改进成一个列 环形的队列 取模：%
@@ -26,7 +26,8 @@ public class ArraySimulateQueue {
     public static void main(String[] args) {
         // 创建一个队列
         ArrayQueue queue = new ArrayQueue(3);
-        char key = ' '; // 接收用户输入
+        // 接收用户输入
+        char key = ' ';
         Scanner scanner = new Scanner(System.in);
         boolean loop = true;
         // 输出一个菜单
@@ -36,7 +37,8 @@ public class ArraySimulateQueue {
             System.out.println("a(add): 添加数据到队列");
             System.out.println("g(get): 从队列取出数据");
             System.out.println("h(head): 查看队列头的数据");
-            key = scanner.next().charAt(0); // 接收一个字符
+            // 接收一个字符
+            key = scanner.next().charAt(0);
             switch (key) {
                 case 's':
                     queue.showQueue();
@@ -81,10 +83,25 @@ public class ArraySimulateQueue {
  * 使用数组模拟队列-编写一个ArrayQueue类
  */
 class ArrayQueue {
-    private int maxSize; // 表示数组的最大容量
-    private int front; // 队列头
-    private int rear; // 队列尾
-    private int[] arr; // 该数据用于存放数据, 模拟队列
+    /**
+     * 表示数组的最大容量
+     */
+    private int maxSize;
+
+    /**
+     * 队列头
+     */
+    private int front;
+
+    /**
+     * 队列尾
+     */
+    private int rear;
+
+    /**
+     * 该数据用于存放数据, 模拟队列
+     */
+    private int[] arr;
 
     /**
      * 创建队列的构造器
@@ -94,12 +111,15 @@ class ArrayQueue {
     public ArrayQueue(int arrMaxSize) {
         maxSize = arrMaxSize;
         arr = new int[maxSize];
-        front = -1; // 指向队列头部，分析出front是指向队列头的前一个位置.
-        rear = -1; // 指向队列尾，指向队列尾的数据(即就是队列最后一个数据)
+        // 指向队列头部，分析出front是指向队列头的前一个位置.
+        front = -1;
+        // 指向队列尾，指向队列尾的数据(即就是队列最后一个数据)
+        rear = -1;
     }
 
     /**
      * 判断队列是否满
+     * 数组下标从0开始，所以maxSize - 1
      *
      * @return
      */
@@ -118,6 +138,10 @@ class ArrayQueue {
 
     /**
      * 添加数据到队列
+     * addQueue 的处理需要有两个步骤：思路分析
+     * 1) 将尾指针往后移：rear+1 , 当 front == rear 【空】
+     * 2) 若尾指针 rear 小于队列的最大下标 maxSize-1，则将数据存入 rear 所指的数组元素中，否则无法存入数据。
+     * rear == maxSize - 1[队列满]（数组下标从0开始）
      *
      * @param n
      */
@@ -127,7 +151,8 @@ class ArrayQueue {
             System.out.println("队列满，不能加入数据~");
             return;
         }
-        rear++; // 让rear 后移
+        // 让rear 后移，先后移再赋值
+        rear++;
         arr[rear] = n;
     }
 
@@ -142,7 +167,8 @@ class ArrayQueue {
             // 通过抛出异常
             throw new RuntimeException("队列空，不能取数据");
         }
-        front++; // front后移
+        // front后移
+        front++;
         return arr[front];
 
     }

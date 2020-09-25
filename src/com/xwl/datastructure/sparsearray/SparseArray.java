@@ -3,7 +3,7 @@ package com.xwl.datastructure.sparsearray;
 import java.io.*;
 
 /**
- * @Auther: xwl
+ * @Author: xwl
  * @Date: 2019/5/31 11:37
  * @Description: 稀疏数组
  * 需求：模拟五子棋，创建一个11 * 11大小的二维数组模拟棋盘，数字1代表白子，数字2代表黑子；
